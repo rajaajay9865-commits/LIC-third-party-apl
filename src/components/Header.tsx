@@ -33,6 +33,8 @@ interface HeaderProps {
   onOpenSearch: () => void;
   onGenerateSynthetic: () => void;
   totalClaimsCount: number;
+  userName?: string;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -49,6 +51,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSearch,
   onGenerateSynthetic,
   totalClaimsCount,
+  userName = 'Rahul Sharma',
+  onLogout,
 }) => {
   return (
     <header className="bg-slate-900 border-b border-slate-800 text-slate-100 sticky top-0 z-40 shadow-sm">
@@ -90,18 +94,18 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 via-indigo-800 to-slate-900 border border-indigo-500/40 flex items-center justify-center text-white shadow-md">
-            <ShieldCheck className="w-5 h-5 text-indigo-200" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-700 to-cyan-500 border border-cyan-400/40 flex items-center justify-center text-white shadow-md">
+            <span className="font-extrabold text-sm tracking-tighter">CLI</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg tracking-tight text-white font-sans">AegisClaim AI</span>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                Enterprise Cloud
+              <span className="font-bold text-lg tracking-tight text-white font-sans">CLI CONNECTION</span>
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                Unified Portal
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-normal">
-              Machine Learning Claim Risk & Dual-Model Divergence Governance
+              Claims Adjudication, Scheme Subsidies & Smart Payment Gateway
             </p>
           </div>
         </div>
@@ -198,19 +202,36 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          {/* Role Switcher */}
-          <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800">
-            <UserCheck className="w-3.5 h-3.5 text-indigo-400 ml-1.5" />
-            <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">Role:</span>
-            <select
-              value={currentRole}
-              onChange={(e) => onRoleChange(e.target.value as UserRole)}
-              className="bg-transparent text-xs text-indigo-200 font-medium focus:outline-none focus:ring-0 pr-1 cursor-pointer"
-            >
-              <option value="claims_analyst" className="bg-slate-900 text-slate-100">Claims Analyst</option>
-              <option value="risk_analyst" className="bg-slate-900 text-slate-100">Risk & Fraud Analyst</option>
-              <option value="admin" className="bg-slate-900 text-slate-100">Chief Risk Officer (Admin)</option>
-            </select>
+          {/* Role Switcher & User Profile */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800">
+              <UserCheck className="w-3.5 h-3.5 text-indigo-400 ml-1.5" />
+              <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">Role:</span>
+              <select
+                value={currentRole}
+                onChange={(e) => onRoleChange(e.target.value as UserRole)}
+                className="bg-transparent text-xs text-indigo-200 font-medium focus:outline-none focus:ring-0 pr-1 cursor-pointer"
+              >
+                <option value="claims_analyst" className="bg-slate-900 text-slate-100">Claims Analyst</option>
+                <option value="risk_analyst" className="bg-slate-900 text-slate-100">Risk & Fraud Analyst</option>
+                <option value="admin" className="bg-slate-900 text-slate-100">Chief Risk Officer (Admin)</option>
+              </select>
+            </div>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition cursor-pointer"
+                title="Switch Account or Return to CLIC Login Screen"
+              >
+                <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400 text-white flex items-center justify-center text-[10px] font-bold">
+                  {userName.charAt(0)}
+                </div>
+                <span className="hidden md:inline">{userName.split(' ')[0]}</span>
+                <span className="text-slate-500 hidden md:inline">|</span>
+                <span className="text-slate-400 hover:text-rose-400">Logout</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

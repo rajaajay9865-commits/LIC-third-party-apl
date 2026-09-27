@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
+import { LoginPage } from './components/LoginPage';
 import { DashboardOverview } from './components/DashboardOverview';
 import { ClaimsTable } from './components/ClaimsTable';
 import { ClaimDetailWorkbench } from './components/ClaimDetailWorkbench';
@@ -10,16 +11,21 @@ import { ReportsModal } from './components/ReportsModal';
 import { SchemaRepositoryModal } from './components/SchemaRepositoryModal';
 import { CommandPaletteModal } from './components/CommandPaletteModal';
 import { SystemDocumentationModal } from './components/SystemDocumentationModal';
+import { CliNavigationHub } from './components/CliNavigationHub';
 import { INITIAL_CLAIMS, generateSyntheticClaims } from './data/mockClaimsDataset';
 import { ClaimRecord, RiskTier, UserRole, AuditLogEntry } from './types/insurance';
 import { predictClaimRisk } from './utils/mlEngine';
 import { CheckCircle2, Info, ShieldCheck, Cpu, Lock, Sparkles } from 'lucide-react';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('rahul.sharma@clic.enterprise');
+  const [currentUserName, setCurrentUserName] = useState<string>('Rahul Sharma');
   const [claims, setClaims] = useState<ClaimRecord[]>(INITIAL_CLAIMS);
   const [selectedClaim, setSelectedClaim] = useState<ClaimRecord | null>(null);
   const [currentRole, setCurrentRole] = useState<UserRole>('claims_analyst');
   const [isTokenized, setIsTokenized] = useState<boolean>(true);
+  const [activeCliTab, setActiveCliTab] = useState<'dashboard' | 'clients' | 'tasks' | 'reports' | 'settings' | 'payments'>('dashboard');
 
   // Filters
   const [activeRiskFilter, setActiveRiskFilter] = useState<RiskTier | 'ALL'>('ALL');
@@ -169,6 +175,43 @@ export default function App() {
     showToast(`Thresholds updated: High-Risk ≥ ${(newHigh * 100).toFixed(0)}%, Fast-Track ≤ ${(newFast * 100).toFixed(0)}%`);
   };
 
+  // Login & Logout Handlers
+  const handleLogin = (role: UserRole, email: string, name: string) => {
+    setIsAuthenticated(true);
+    setCurrentRole(role);
+    setCurrentUserEmail(email);
+    setCurrentUserName(name);
+    handleLogAudit('USER_LOGIN', `User ${name} (${email}) signed into CLIC Enterprise Portal with role ${role.toUpperCase()}.`);
+    showToast(`Welcome back, ${name}! Logged in as ${role.replace('_', ' ').toUpperCase()}`);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    handleLogAudit('USER_LOGOUT', `User ${currentUserName} ended session.`);
+    showToast('Signed out of session. Returned to CLIC Login.');
+  };
+
+  // If not authenticated, show the high-fidelity CLIC Login Page
+  if (!isAuthenticated) {
+    return (
+      <>
+        {toastMessage && (
+          <div className="fixed bottom-5 right-5 z-50 bg-slate-900 border border-cyan-500/80 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs animate-slideUp">
+            <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+        <LoginPage
+          onLogin={handleLogin}
+          onContinueAsGuest={() => {
+            setIsAuthenticated(true);
+            showToast('Entered as Guest / Demonstration Mode');
+          }}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-600 selection:text-white">
       {/* Toast Notification */}
@@ -206,6 +249,8 @@ export default function App() {
         onOpenSearch={() => setIsCommandPaletteOpen(true)}
         onGenerateSynthetic={handleGenerateSynthetic}
         totalClaimsCount={claims.length}
+        userName={currentUserName}
+        onLogout={handleLogout}
       />
 
       {/* Main Workspace Container */}
@@ -236,26 +281,45 @@ export default function App() {
           </div>
         </div>
 
-        {/* Executive Dashboard & Metrics Overview */}
-        <DashboardOverview
+        {/* CLI CONNECTION: Unified Management for Better Connections for a Smarter Tomorrow */}
+        <CliNavigationHub
+          activeTab={activeCliTab}
+          onTabChange={(tab) => {
+            setActiveCliTab(tab);
+            if (tab === 'reports') {
+              // Can also switch reports
+            }
+          }}
           claims={claims}
-          onFilterRiskTier={(tier) => setActiveRiskFilter(tier)}
-          onFilterStatus={(status) => setActiveStatusFilter(status)}
           onSelectClaim={(claim) => setSelectedClaim(claim)}
+          onOpenGovernance={() => setIsGovernanceOpen(true)}
+          onOpenReportsModal={() => setIsReportsOpen(true)}
         />
 
-        {/* Claims Ledger & Adjudication Table */}
-        <ClaimsTable
-          claims={claims}
-          selectedClaim={selectedClaim}
-          onSelectClaim={(claim) => setSelectedClaim(claim)}
-          isTokenized={isTokenized}
-          activeRiskFilter={activeRiskFilter}
-          activeStatusFilter={activeStatusFilter}
-          onFilterRiskTier={(tier) => setActiveRiskFilter(tier)}
-          onFilterStatus={(status) => setActiveStatusFilter(status)}
-          onBatchScore={handleBatchScore}
-        />
+        {/* Executive Dashboard & Metrics Overview (Shown when on Dashboard tab) */}
+        {activeCliTab === 'dashboard' && (
+          <>
+            <DashboardOverview
+              claims={claims}
+              onFilterRiskTier={(tier) => setActiveRiskFilter(tier)}
+              onFilterStatus={(status) => setActiveStatusFilter(status)}
+              onSelectClaim={(claim) => setSelectedClaim(claim)}
+            />
+
+            {/* Claims Ledger & Adjudication Table */}
+            <ClaimsTable
+              claims={claims}
+              selectedClaim={selectedClaim}
+              onSelectClaim={(claim) => setSelectedClaim(claim)}
+              isTokenized={isTokenized}
+              activeRiskFilter={activeRiskFilter}
+              activeStatusFilter={activeStatusFilter}
+              onFilterRiskTier={(tier) => setActiveRiskFilter(tier)}
+              onFilterStatus={(status) => setActiveStatusFilter(status)}
+              onBatchScore={handleBatchScore}
+            />
+          </>
+        )}
       </main>
 
       {/* Modals & Slide-overs */}
