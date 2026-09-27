@@ -1,0 +1,6 @@
+{
+  "name": "AegisClaim AI - Insurance Claim Prediction & Risk Analysis",
+  "description": "AI-assisted insurance claim prediction and risk analysis platform with machine learning risk modeling, SHAP explainability, claim frequency analytics, and analyst decision support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
