@@ -55,16 +55,16 @@ export const Header: React.FC<HeaderProps> = ({
   onLogout,
 }) => {
   return (
-    <header className="bg-slate-900 border-b border-slate-800 text-slate-100 sticky top-0 z-40 shadow-sm">
+    <header className="backdrop-blur-xl bg-[#070D1E]/90 border-b border-white/[0.08] text-slate-100 sticky top-0 z-40 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
       {/* Top Banner Notice: Live MLOps Telemetry & Compliance Disclaimer */}
-      <div className="bg-slate-950 px-4 py-1.5 border-b border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+      <div className="bg-[#040814]/90 px-4 py-1.5 border-b border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wide uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">
+          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wide uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 shadow-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Dual Pipelines Live: XGB-2.4.1 (14ms) / RF-2.3.0</span>
+            <span>Dual Inference Active: XGB-2.4.1 (14ms) / RF-2.3.0</span>
           </div>
           <span className="hidden sm:inline text-slate-600">·</span>
-          <span className="flex items-center gap-1 text-amber-400/90 font-medium text-[11px]">
+          <span className="flex items-center gap-1.5 text-amber-400/90 font-medium text-[11px]">
             <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
             <span>Statutory Decision Support: Human-in-the-Loop Adjudication Mandated.</span>
           </span>
@@ -77,10 +77,10 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="text-slate-600 hidden sm:inline">·</span>
           <button
             onClick={onToggleTokenization}
-            className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium transition cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-medium transition cursor-pointer backdrop-blur-md ${
               isTokenized 
-                ? 'bg-indigo-950 text-indigo-300 border border-indigo-700/60 hover:bg-indigo-900' 
-                : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
+                ? 'bg-indigo-950/80 text-indigo-300 border border-indigo-700/60 hover:bg-indigo-900' 
+                : 'bg-white/[0.05] text-slate-300 border border-white/[0.1] hover:bg-white/[0.1]'
             }`}
             title="Toggle PII Masking (HIPAA / GDPR Compliance)"
           >
@@ -94,18 +94,18 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-700 to-cyan-500 border border-cyan-400/40 flex items-center justify-center text-white shadow-md">
-            <span className="font-extrabold text-sm tracking-tighter">CLI</span>
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-400 border border-cyan-400/40 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+            <ShieldCheck className="w-5 h-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg tracking-tight text-white font-sans">CLI CONNECTION</span>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                Unified Portal
+              <span className="font-black text-lg tracking-tight text-white font-sans">AegisClaim AI</span>
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 font-semibold">
+                Enterprise
               </span>
             </div>
             <p className="text-[11px] text-slate-400 font-normal">
-              Claims Adjudication, Scheme Subsidies & Smart Payment Gateway
+              Autonomous Risk Scoring, Model Governance & CLI Connection
             </p>
           </div>
         </div>
@@ -114,13 +114,13 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex-1 max-w-xs hidden xl:block">
           <button
             onClick={onOpenSearch}
-            className="w-full bg-slate-950/80 hover:bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 rounded-lg py-1.5 px-3 flex items-center justify-between text-xs transition cursor-pointer group"
+            className="w-full backdrop-blur-md bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-slate-400 rounded-xl py-1.5 px-3 flex items-center justify-between text-xs transition cursor-pointer group"
           >
             <div className="flex items-center gap-2">
-              <Search className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-400 transition" />
+              <Search className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-400 transition" />
               <span>Search claims, policies, losses...</span>
             </div>
-            <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+            <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.05] text-slate-400 border border-white/[0.1]">
               ⌘K
             </kbd>
           </button>

@@ -213,12 +213,26 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-[#050A18] text-slate-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-cyan-500 selection:text-slate-950">
+      {/* Background ambient radiance for depth & glassmorphism illumination */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[500px] bg-gradient-to-b from-blue-600/12 via-indigo-600/08 to-cyan-500/08 rounded-full blur-[160px] pointer-events-none -z-10" />
+      <div className="fixed -bottom-40 -right-40 w-96 h-96 bg-cyan-500/08 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="fixed top-1/3 -left-40 w-96 h-96 bg-blue-700/08 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div 
+        className="fixed inset-0 opacity-[0.025] pointer-events-none -z-10" 
+        style={{
+          backgroundImage: 'radial-gradient(#93c5fd 1px, transparent 1px)',
+          backgroundSize: '32px 32px'
+        }} 
+      />
+
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 border border-indigo-500/80 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs animate-slideUp">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>{toastMessage}</span>
+        <div className="fixed bottom-6 right-6 z-50 backdrop-blur-2xl bg-[#09152B]/95 border border-cyan-400/40 text-white px-4 py-3 rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] flex items-center gap-3 text-xs animate-slideUp">
+          <div className="w-5 h-5 rounded-full bg-emerald-950 text-emerald-400 flex items-center justify-center border border-emerald-800 shrink-0">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+          </div>
+          <span className="font-medium text-slate-200">{toastMessage}</span>
         </div>
       )}
 
@@ -253,30 +267,39 @@ export default function App() {
         onLogout={handleLogout}
       />
 
-      {/* Main Workspace Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Role Context Notification Bar */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <Info className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-            <span className="text-slate-300">
-              Active Workspace: <strong className="text-white capitalize">{currentRole.replace('_', ' ')} Mode</strong>.
-              {currentRole === 'claims_analyst' && ' Focusing on triage queues, FNOL validation, and adjudication workbench.'}
-              {currentRole === 'risk_analyst' && ' Focusing on portfolio loss distribution, anomaly detection, and SHAP attribution.'}
-              {currentRole === 'admin' && ' Full administrative rights: threshold governance, MLOps calibration, and audit logging.'}
-            </span>
+      {/* Main Workspace Container - Standardized Grid Spacing & Layout Rhythm */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 relative z-10">
+        
+        {/* Role Context Notification Bar - High-End Glassmorphism */}
+        <div className="backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-2xl p-3.5 sm:px-5 sm:py-3.5 shadow-[0_8px_30px_rgb(0,0,0,0.35)] flex flex-col md:flex-row md:items-center justify-between gap-3.5 transition-all">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-cyan-950/80 border border-cyan-800/60 flex items-center justify-center text-cyan-400 shrink-0 shadow-sm">
+              <Info className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-semibold">Active Session</span>
+                <span className="text-slate-600">·</span>
+                <span className="text-xs font-bold text-white capitalize">{currentRole.replace('_', ' ')} Workspace</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-tight mt-0.5">
+                {currentRole === 'claims_analyst' && 'Focusing on triage queues, FNOL validation, and straight-through adjudication.'}
+                {currentRole === 'risk_analyst' && 'Focusing on portfolio loss distribution, anomaly detection, and SHAP feature attribution.'}
+                {currentRole === 'admin' && 'Full administrative rights: threshold governance, MLOps calibration, and audit logging.'}
+              </p>
+            </div>
           </div>
 
-          <div className="hidden sm:flex items-center gap-3 font-mono text-[11px] text-slate-400">
-            <span>High Risk Cutoff: <strong className="text-rose-400">{(highThreshold * 100).toFixed(0)}%</strong></span>
-            <span>·</span>
-            <span>Fast-Track: <strong className="text-emerald-400">{(fastTrackThreshold * 100).toFixed(0)}%</strong></span>
-            <span>·</span>
+          <div className="flex items-center gap-2 sm:gap-3 font-mono text-[11px] text-slate-300 bg-white/[0.02] border border-white/[0.06] rounded-xl px-3 py-1.5 self-start md:self-auto">
+            <span>Cutoff: <strong className="text-rose-400 font-bold">{(highThreshold * 100).toFixed(0)}%</strong></span>
+            <span className="text-slate-600">·</span>
+            <span>Fast-Track: <strong className="text-emerald-400 font-bold">{(fastTrackThreshold * 100).toFixed(0)}%</strong></span>
+            <span className="text-slate-600">·</span>
             <button
               onClick={() => setIsGovernanceOpen(true)}
-              className="text-indigo-400 hover:text-indigo-300 underline cursor-pointer"
+              className="text-cyan-400 hover:text-cyan-300 font-medium underline cursor-pointer"
             >
-              Open Divergence Heatmap
+              Heatmap
             </button>
           </div>
         </div>
@@ -298,7 +321,7 @@ export default function App() {
 
         {/* Executive Dashboard & Metrics Overview (Shown when on Dashboard tab) */}
         {activeCliTab === 'dashboard' && (
-          <>
+          <div className="space-y-6 sm:space-y-8">
             <DashboardOverview
               claims={claims}
               onFilterRiskTier={(tier) => setActiveRiskFilter(tier)}
@@ -318,7 +341,7 @@ export default function App() {
               onFilterStatus={(status) => setActiveStatusFilter(status)}
               onBatchScore={handleBatchScore}
             />
-          </>
+          </div>
         )}
       </main>
 
@@ -403,40 +426,40 @@ export default function App() {
         />
       )}
 
-      {/* Professional Enterprise Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6 lg:px-8 text-xs text-slate-400 font-sans">
+      {/* Professional Enterprise Footer Matching AegisClaim AI Corporate Identity */}
+      <footer className="border-t border-white/[0.08] backdrop-blur-xl bg-[#060D1E]/80 py-8 px-4 sm:px-6 lg:px-8 text-xs text-slate-400 font-sans mt-auto relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-indigo-950 border border-indigo-800/60 flex items-center justify-center text-indigo-400">
-              <ShieldCheck className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 border border-cyan-400/30 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <p className="font-semibold text-white tracking-tight">
+              <p className="font-bold text-white tracking-tight">
                 AegisClaim AI · Enterprise Insurance Risk & Decision Support Suite
               </p>
-              <p className="text-[11px] text-slate-500 font-mono">
-                Model: XGBoost-2.4.1 (Champion) / Random Forest-2.3.0 (Challenger) · 14ms Latency · ROC-AUC 0.892
+              <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                Model: XGBoost-2.4.1 (Champion) / Random Forest-2.3.0 (Challenger) · 14ms Dual-Pipeline Latency · ROC-AUC 0.892
               </p>
             </div>
           </div>
 
           {/* Compliance & Security Badges */}
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-1">
+            <span className="px-2.5 py-1 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 flex items-center gap-1.5 backdrop-blur-md">
               <Lock className="w-3 h-3 text-emerald-400" />
               SOC 2 Type II
             </span>
-            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-indigo-400" />
+            <span className="px-2.5 py-1 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 flex items-center gap-1.5 backdrop-blur-md">
+              <ShieldCheck className="w-3 h-3 text-cyan-400" />
               NAIC Model Governance
             </span>
-            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-1">
+            <span className="px-2.5 py-1 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 flex items-center gap-1.5 backdrop-blur-md">
               <CheckCircle2 className="w-3 h-3 text-teal-400" />
               EEOC 4/5ths Non-Bias
             </span>
             <button
               onClick={() => setIsDocsOpen(true)}
-              className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 hover:bg-indigo-900 transition cursor-pointer"
+              className="px-2.5 py-1 rounded-xl bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 hover:bg-indigo-900 transition cursor-pointer"
             >
               System Docs
             </button>
